@@ -35,7 +35,7 @@ namespace ApiOAuthEmpleados.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("[action")]
+        [Route("[action]")]
         public async Task<ActionResult<Empleado>> Perfil()
         {
             Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
@@ -46,7 +46,7 @@ namespace ApiOAuthEmpleados.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("[action")]
+        [Route("[action]")]
         public async Task<ActionResult<List<Empleado>>> Compis()
         {
             Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
