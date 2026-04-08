@@ -11,11 +11,13 @@ namespace MvcOAuthApiEmpleados.Services
     {
         private string UrlApi;
         private MediaTypeWithQualityHeaderValue header;
+        private IHttpContextAccessor contextAccessor;
 
-        public ServiceEmpleados(IConfiguration configuration)
+        public ServiceEmpleados(IConfiguration configuration, IHttpContextAccessor contextAccessor)
         {
             this.UrlApi = configuration.GetValue<string>("ApiUrls:ApiEmpleados");
             this.header = new MediaTypeWithQualityHeaderValue("application/json");
+            this.contextAccessor = contextAccessor;
         }
 
         public async Task<string> LoginAsync(string username, string password)
@@ -100,8 +102,9 @@ namespace MvcOAuthApiEmpleados.Services
         }
 
         //POR AHORA, RECIBIREMOS EL TOKEN EN EL METODO
-        public async Task<Empleado> FindEmpleadoAsync(int idEmpleado, string token)
+        public async Task<Empleado> FindEmpleadoAsync(int idEmpleado)
         {
+            string token = this.contextAccessor.HttpContext.User.FindFirst(x => x.Type == "TOKEN").Value;
             string request = "api/empleados/" + idEmpleado;
             Empleado empleado = await this.CallApiAsync<Empleado>(request, token);
             return empleado;
