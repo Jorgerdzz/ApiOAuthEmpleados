@@ -8,22 +8,22 @@ namespace ApiOAuthEmpleados.Helpers
 {
     public class HelperCifrado
     {
-        private static string _secretKey;
+        private static string secretKey;
 
         public HelperCifrado(IConfiguration configuration)
         {
             // Opcional: depender de la sección de tu appsettings. 
             // Usa la misma donde tienes la clave del token, por ejemplo "ApiOAuthToken:SecretKey" o "ClaveToken:SecretKey"
-            _secretKey = configuration.GetValue<string>("ApiOAuthToken:SecretKey");
+            this.secretKey = configuration.GetValue<string>("ApiOAuthToken:SecretKey");
         }
 
         // Método para encriptar el texto (en tu caso, el JSON del UserData)
         public static string Encrypt(string texto)
         {
-            if (string.IsNullOrEmpty(_secretKey))
+            if (string.IsNullOrEmpty(this.secretKey))
                 throw new InvalidOperationException("La clave secreta no se ha inicializado en HelperCifrado.");
 
-            byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(_secretKey));
+            byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(this.secretKey));
             
             // Creamos un vector de inicialización de 16 bytes (por simplicidad, a 0)
             byte[] iv = new byte[16];
@@ -55,10 +55,10 @@ namespace ApiOAuthEmpleados.Helpers
         // Método para desencriptar el texto
         public static string Decrypt(string textoCifrado)
         {
-            if (string.IsNullOrEmpty(_secretKey))
+            if (string.IsNullOrEmpty(this.secretKey))
                 throw new InvalidOperationException("La clave secreta no se ha inicializado en HelperCifrado.");
 
-            byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(_secretKey));
+            byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(this.secretKey));
             byte[] iv = new byte[16];
             byte[] cipherBytes = Convert.FromBase64String(textoCifrado);
 
