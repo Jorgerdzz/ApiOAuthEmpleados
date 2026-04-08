@@ -25,6 +25,13 @@ namespace ApiOAuthEmpleados.Repositories
                 .FirstOrDefaultAsync(e => e.IdEmpleado == idEmpleado);
         }
 
+        public async Task<List<Empleado>> GetCompisAsync(int idDepartamento)
+        {
+            return await this.context.Empleados
+                .Where(e => e.IdDepartamento == idDepartamento)
+                .ToListAsync();
+        }
+
         public async Task<Empleado> LogInEmpleadoAsync(string apellido, int idEmpleado)
         {
             return await this.context.Empleados
