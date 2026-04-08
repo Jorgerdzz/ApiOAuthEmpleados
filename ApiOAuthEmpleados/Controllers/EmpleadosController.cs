@@ -1,4 +1,5 @@
-﻿using ApiOAuthEmpleados.Models;
+﻿using ApiOAuthEmpleados.Helpers;
+using ApiOAuthEmpleados.Models;
 using ApiOAuthEmpleados.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,8 +41,10 @@ namespace ApiOAuthEmpleados.Controllers
         {
             Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
             string jsonEmpleado = claim.Value;
-            Empleado empleado = JsonConvert.DeserializeObject<Empleado>(jsonEmpleado);
-            return await this.repo.FindEmpleadoAsync(empleado.IdEmpleado);
+            
+            string claimDesencriptado = HelperCifrado.Decrypt(jsonEmpleado);
+            Empleado emp = JsonConvert.DeserializeObject<Empleado>(claimDesencriptado);
+            return await this.repo.FindEmpleadoAsync(emp.IdEmpleado);
         }
 
         [Authorize]
@@ -51,8 +54,10 @@ namespace ApiOAuthEmpleados.Controllers
         {
             Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
             string jsonEmpleado = claim.Value;
-            Empleado empleado = JsonConvert.DeserializeObject<Empleado>(jsonEmpleado);
-            return await this.repo.GetCompisAsync(empleado.IdDepartamento);
+            
+            string claimDesencriptado = HelperCifrado.Decrypt(jsonEmpleado);
+            Empleado emp = JsonConvert.DeserializeObject<Empleado>(claimDesencriptado);
+            return await this.repo.GetCompisAsync(emp.IdDepartamento);
         }
 
     }

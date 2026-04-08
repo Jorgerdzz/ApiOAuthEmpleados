@@ -39,10 +39,13 @@ namespace ApiOAuthEmpleados.Controllers
                     new SigningCredentials(this.helper.GetKeyToken(), SecurityAlgorithms.HmacSha256);
 
                 string jsonEmpleado = JsonConvert.SerializeObject(empleado);
+
+                string jsonCifrado = HelperCifrado.Encrypt(jsonEmpleado);
+
                 //CREAMOS UN ARRAY DE CLAIMS PARA EL TOKEN
                 Claim[] informacion = new[]
                 {
-                    new Claim("UserData", jsonEmpleado)
+                    new Claim("UserData", jsonCifrado)
                 };  
 
 

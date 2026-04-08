@@ -10,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 HelperActionOAuthService helper = new HelperActionOAuthService(builder.Configuration);
 //ESTA INSTANCIA SOLAMENTE DEBEMOS CREARLA UNA VEZ
 builder.Services.AddSingleton<HelperActionOAuthService>(helper);
+
+// INSTANCIAMOS EL HELPERCIFRADO PARA INICIALIZAR LA VARIABLE ESTÁTICA
+HelperCifrado helperCifrado = new HelperCifrado(builder.Configuration);
+builder.Services.AddSingleton<HelperCifrado>(helperCifrado);
+
 //HABILITAMOS LA SEGURIDAD DENTRO DE PROGRAM
 builder.Services.AddAuthentication(helper.GetAuthenticationSchema())
     .AddJwtBearer(helper.GetJwtBearerOptions());
