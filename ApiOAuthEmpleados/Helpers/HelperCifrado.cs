@@ -14,7 +14,7 @@ namespace ApiOAuthEmpleados.Helpers
         {
             // Opcional: depender de la sección de tu appsettings. 
             // Usa la misma donde tienes la clave del token, por ejemplo "ApiOAuthToken:SecretKey" o "ClaveToken:SecretKey"
-            _secretKey = configuration.GetValue<string>("ApiOAuthToken:SecretKey");
+            _secretKey = configuration.GetValue<string>("Cypher:Key");
         }
 
         // Método para encriptar el texto (en tu caso, el JSON del UserData)

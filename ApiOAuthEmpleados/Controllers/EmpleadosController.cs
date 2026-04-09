@@ -15,10 +15,12 @@ namespace ApiOAuthEmpleados.Controllers
     public class EmpleadosController : ControllerBase
     {
         private RepositoryHospital repo;
+        private HelperEmpleadoToken helper;
 
-        public EmpleadosController(RepositoryHospital repo)
+        public EmpleadosController(RepositoryHospital repo, HelperEmpleadoToken helper)
         {
             this.repo = repo;
+            this.helper = helper;
         }
 
         [HttpGet]
@@ -39,25 +41,17 @@ namespace ApiOAuthEmpleados.Controllers
         [Route("[action]")]
         public async Task<ActionResult<Empleado>> Perfil()
         {
-            Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
-            string jsonEmpleado = claim.Value;
-            
-            string claimDesencriptado = HelperCifrado.Decrypt(jsonEmpleado);
-            Empleado emp = JsonConvert.DeserializeObject<Empleado>(claimDesencriptado);
-            return await this.repo.FindEmpleadoAsync(emp.IdEmpleado);
+            EmpleadoModel empleado = this.helper.GetEmpleado();
+            return await this.repo.FindEmpleadoAsync(empleado.IdEmpleado);
         }
 
-        [Authorize]
+        [Authorize(Roles = "PRESIDENTE")]
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult<List<Empleado>>> Compis()
         {
-            Claim claim = HttpContext.User.FindFirst(z => z.Type == "UserData");
-            string jsonEmpleado = claim.Value;
-            
-            string claimDesencriptado = HelperCifrado.Decrypt(jsonEmpleado);
-            Empleado emp = JsonConvert.DeserializeObject<Empleado>(claimDesencriptado);
-            return await this.repo.GetCompisAsync(emp.IdDepartamento);
+            EmpleadoModel empleado = this.helper.GetEmpleado();
+            return await this.repo.GetCompisAsync(empleado.IdDepartamento);
         }
 
     }

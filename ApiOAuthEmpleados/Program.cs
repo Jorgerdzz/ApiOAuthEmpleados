@@ -19,6 +19,9 @@ builder.Services.AddSingleton<HelperCifrado>(helperCifrado);
 builder.Services.AddAuthentication(helper.GetAuthenticationSchema())
     .AddJwtBearer(helper.GetJwtBearerOptions());
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<HelperEmpleadoToken>();
+
 // Add services to the container.
 
 string connectionString = builder.Configuration.GetConnectionString("SqlHospital");
